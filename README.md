@@ -35,12 +35,12 @@ npm install eslint eslint-plugin-react --save-dev
     "settings": {
         "react": {
             "createClass": "createReactClass", // 用于使用的组件工厂的正则表达式，
-                                                                                 // 默认为 "createReactClass"
+                                               // 默认为 "createReactClass"
             "pragma": "React",  // 使用的Pragma，默认为 "React"
             "fragment": "Fragment",  // 使用的Fragment（可能是<pragma>的属性），默认为 "Fragment"
             "version": "detect", // React版本。"detect"会自动选择你已安装的版本。
-                                                     // 你也可以使用`16.0`、`16.3`等，如果你想覆盖检测到的值。
-                                                     // 如果缺失，它将默认为"latest"并发出警告，在未来将默认为"detect"
+                                 // 你也可以使用`16.0`、`16.3`等，如果你想覆盖检测到的值。
+                                 // 如果缺失，它将默认为"latest"并发出警告，在未来将默认为"detect"
             "flowVersion": "0.53" // Flow版本
         },
         "propWrapperFunctions": [
