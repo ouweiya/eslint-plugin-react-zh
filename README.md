@@ -1,168 +1,166 @@
-# `eslint-plugin-react` <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
-
-===================
+# eslint-plugin-react
 
 [![github actions][actions-image]][actions-url]
 [![Maintenance Status][status-image]][status-url]
 [![NPM version][npm-image]][npm-url]
 [![Tidelift][tidelift-image]][tidelift-url]
 
-React specific linting rules for `eslint`
+针对`eslint`的React特定的lint规则
 
-## Installation
+## 安装
 
 ```sh
 npm install eslint eslint-plugin-react --save-dev
 ```
 
-It is also possible to install ESLint globally rather than locally (using `npm install -g eslint`). However, this is not recommended, and any plugins or shareable configs that you use must be installed locally in either case.
+也可以全局安装ESLint（使用`npm install -g eslint`），但不推荐这样做，你使用的任何插件或可共享配置都必须在任何情况下本地安装。
 
-## Configuration (legacy: `.eslintrc*`) <a id="configuration"></a>
+## 配置（旧版：`.eslintrc*`） <a id="configuration"></a>
 
-Use [our preset](#recommended) to get reasonable defaults:
+使用[我们的预设](#recommended)获取合理的默认值：
 
 ```json
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended"
-  ]
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended"
+    ]
 ```
 
-If you are using the [new JSX transform from React 17](https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#removing-unused-react-imports), extend [`react/jsx-runtime`](https://github.com/jsx-eslint/eslint-plugin-react/blob/c8917b0885094b5e4cc2a6f613f7fb6f16fe932e/index.js#L163-L176) in your eslint config (add `"plugin:react/jsx-runtime"` to `"extends"`) to disable the relevant rules.
+如果你正在使用[React 17的新JSX转换](https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html#removing-unused-react-imports)，在你的eslint配置中扩展[`react/jsx-runtime`](https://github.com/jsx-eslint/eslint-plugin-react/blob/c8917b0885094b5e4cc2a6f613f7fb6f16fe932e/index.js#L163-L176)（在`"extends"`中添加`"plugin:react/jsx-runtime"`）以禁用相关规则。
 
-You should also specify settings that will be shared across all the plugin rules. ([More about eslint shared settings](https://eslint.org/docs/user-guide/configuring/configuration-files#adding-shared-settings))
+你还应指定将在所有插件规则中共享的设置。([更多关于eslint共享设置的信息](https://eslint.org/docs/user-guide/configuring/configuration-files#adding-shared-settings))
 
 ```json5
 {
-  "settings": {
-    "react": {
-      "createClass": "createReactClass", // Regex for Component Factory to use,
-                                         // default to "createReactClass"
-      "pragma": "React",  // Pragma to use, default to "React"
-      "fragment": "Fragment",  // Fragment to use (may be a property of <pragma>), default to "Fragment"
-      "version": "detect", // React version. "detect" automatically picks the version you have installed.
-                           // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
-                           // It will default to "latest" and warn if missing, and to "detect" in the future
-      "flowVersion": "0.53" // Flow version
-    },
-    "propWrapperFunctions": [
-        // The names of any function used to wrap propTypes, e.g. `forbidExtraProps`. If this isn't set, any propTypes wrapped in a function will be skipped.
-        "forbidExtraProps",
-        {"property": "freeze", "object": "Object"},
-        {"property": "myFavoriteWrapper"},
-        // for rules that check exact prop wrappers
-        {"property": "forbidExtraProps", "exact": true}
-    ],
-    "componentWrapperFunctions": [
-        // The name of any function used to wrap components, e.g. Mobx `observer` function. If this isn't set, components wrapped by these functions will be skipped.
-        "observer", // `property`
-        {"property": "styled"}, // `object` is optional
-        {"property": "observer", "object": "Mobx"},
-        {"property": "observer", "object": "<pragma>"} // sets `object` to whatever value `settings.react.pragma` is set to
-    ],
-    "formComponents": [
-      // Components used as alternatives to <form> for forms, eg. <Form endpoint={ url } />
-      "CustomForm",
-      {"name": "SimpleForm", "formAttribute": "endpoint"},
-      {"name": "Form", "formAttribute": ["registerEndpoint", "loginEndpoint"]}, // allows specifying multiple properties if necessary
-    ],
-    "linkComponents": [
-      // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
-      "Hyperlink",
-      {"name": "MyLink", "linkAttribute": "to"},
-      {"name": "Link", "linkAttribute": ["to", "href"]}, // allows specifying multiple properties if necessary
-    ]
-  }
-}
-```
-
-If you do not use a preset you will need to specify individual rules and add extra configuration.
-
-Add "react" to the plugins section.
-
-```json
-{
-  "plugins": [
-    "react"
-  ]
-}
-```
-
-Enable JSX support.
-
-With `eslint` 2+
-
-```json
-{
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
+    "settings": {
+        "react": {
+            "createClass": "createReactClass", // 用于使用的组件工厂的正则表达式，
+                                                                                 // 默认为 "createReactClass"
+            "pragma": "React",  // 使用的Pragma，默认为 "React"
+            "fragment": "Fragment",  // 使用的Fragment（可能是<pragma>的属性），默认为 "Fragment"
+            "version": "detect", // React版本。"detect"会自动选择你已安装的版本。
+                                                     // 你也可以使用`16.0`、`16.3`等，如果你想覆盖检测到的值。
+                                                     // 如果缺失，它将默认为"latest"并发出警告，在未来将默认为"detect"
+            "flowVersion": "0.53" // Flow版本
+        },
+        "propWrapperFunctions": [
+                // 用于包装propTypes的任何函数的名称，例如`forbidExtraProps`。如果没有设置，任何包装在函数中的propTypes都将被跳过。
+                "forbidExtraProps",
+                {"property": "freeze", "object": "Object"},
+                {"property": "myFavoriteWrapper"},
+                // 用于检查确切的prop包装器的规则
+                {"property": "forbidExtraProps", "exact": true}
+        ],
+        "componentWrapperFunctions": [
+                // 用于包装组件的任何函数的名称，例如Mobx的`observer`函数。如果没有设置，这些函数包装的组件将被跳过。
+                "observer", // `property`
+                {"property": "styled"}, // `object`是可选的
+                {"property": "observer", "object": "Mobx"},
+                {"property": "observer", "object": "<pragma>"} // 将`object`设置为`settings.react.pragma`的值
+        ],
+        "formComponents": [
+            // 用作<form>的替代品的组件，例如<Form endpoint={ url } />
+            "CustomForm",
+            {"name": "SimpleForm", "formAttribute": "endpoint"},
+            {"name": "Form", "formAttribute": ["registerEndpoint", "loginEndpoint"]}, // 如果需要，允许指定多个属性
+        ],
+        "linkComponents": [
+            // 用作<a>的替代品的组件，例如<Link to={ url } />
+            "Hyperlink",
+            {"name": "MyLink", "linkAttribute": "to"},
+            {"name": "Link", "linkAttribute": ["to", "href"]}, // 如果需要，允许指定多个属性
+        ]
     }
-  }
 }
 ```
 
-Enable the rules that you would like to use.
+如果你不使用预设，你将需要指定单独的规则并添加额外的配置。
 
-```json
-  "rules": {
-    "react/jsx-uses-react": "error",
-    "react/jsx-uses-vars": "error",
-  }
-```
-
-### Shareable configs
-
-#### Recommended
-
-This plugin exports a `recommended` configuration that enforces React good practices.
-
-To enable this configuration use the `extends` property in your `.eslintrc` config file:
+在插件部分添加"react"。
 
 ```json
 {
-  "extends": ["eslint:recommended", "plugin:react/recommended"]
+    "plugins": [
+        "react"
+    ]
 }
 ```
 
-See [`eslint` documentation](https://eslint.org/docs/user-guide/configuring/configuration-files#extending-configuration-files) for more information about extending configuration files.
+启用JSX支持。
 
-#### All
-
-This plugin also exports an `all` configuration that includes every available rule.
-This pairs well with the `eslint:all` rule.
+对于`eslint` 2+
 
 ```json
 {
-  "plugins": [
-    "react"
-  ],
-  "extends": ["eslint:all", "plugin:react/all"]
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        }
+    }
 }
 ```
 
-**Note**: These configurations will import `eslint-plugin-react` and enable JSX in [parser options](https://eslint.org/docs/user-guide/configuring/language-options#specifying-parser-options).
+启用你想使用的规则。
 
-## Configuration (new: `eslint.config.js`)
+```json
+    "rules": {
+        "react/jsx-uses-react": "error",
+        "react/jsx-uses-vars": "error",
+    }
+```
 
-From [`v8.21.0`](https://github.com/eslint/eslint/releases/tag/v8.21.0), eslint announced a new config system.
-In the new system, `.eslintrc*` is no longer used. `eslint.config.js` would be the default config file name.
-In eslint `v8`, the legacy system (`.eslintrc*`) would still be supported, while in eslint `v9`, only the new system would be supported.
+### 可共享的配置
 
-And from [`v8.23.0`](https://github.com/eslint/eslint/releases/tag/v8.23.0), eslint CLI starts to look up `eslint.config.js`.
-**So, if your eslint is `>=8.23.0`, you're 100% ready to use the new config system.**
+#### 推荐的
 
-You might want to check out the official blog posts,
+此插件导出一个`recommended`配置，该配置强制执行React的良好实践。
+
+要启用此配置，请在你的`.eslintrc`配置文件中使用`extends`属性：
+
+```json
+{
+    "extends": ["eslint:recommended", "plugin:react/recommended"]
+}
+```
+
+查看[`eslint`文档](https://eslint.org/docs/user-guide/configuring/configuration-files#extending-configuration-files)以获取有关扩展配置文件的更多信息。
+
+#### 全部
+
+此插件还导出一个`all`配置，该配置包含每个可用的规则。
+这与`eslint:all`规则配合得很好。
+
+```json
+{
+    "plugins": [
+        "react"
+    ],
+    "extends": ["eslint:all", "plugin:react/all"]
+}
+```
+
+**注意**：这些配置将导入`eslint-plugin-react`并在[解析器选项](https://eslint.org/docs/user-guide/configuring/language-options#specifying-parser-options)中启用JSX。
+
+## 配置（新版：`eslint.config.js`）
+
+从[`v8.21.0`](https://github.com/eslint/eslint/releases/tag/v8.21.0)开始，eslint宣布了一个新的配置系统。
+在新系统中，不再使用`.eslintrc*`。`eslint.config.js`将成为默认的配置文件名。
+在eslint `v8`中，旧系统（`.eslintrc*`）仍将得到支持，而在eslint `v9`中，只有新系统将得到支持。
+
+从[`v8.23.0`](https://github.com/eslint/eslint/releases/tag/v8.23.0)开始，eslint CLI开始查找`eslint.config.js`。
+**所以，如果你的eslint是`>=8.23.0`，你就完全准备好使用新的配置系统了。**
+
+你可能想查看官方的博客文章，
 
 - <https://eslint.org/blog/2022/08/new-config-system-part-1/>
 - <https://eslint.org/blog/2022/08/new-config-system-part-2/>
 - <https://eslint.org/blog/2022/08/new-config-system-part-3/>
 
-and the [official docs](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new).
+以及[官方文档](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new)。
 
-### Plugin
+### 插件
 
-The default export of `eslint-plugin-react` is a plugin object.
+`eslint-plugin-react`的默认导出是一个插件对象。
 
 ```js
 const react = require('eslint-plugin-react');
@@ -186,52 +184,51 @@ module.exports = [
       },
     },
     rules: {
-      // ... any rules you want
+      // ... 你想要的任何规则
       'react/jsx-uses-react': 'error',
       'react/jsx-uses-vars': 'error',
      },
-    // ... others are omitted for brevity
+    // ... 其他的省略了以简洁为主
   },
   …
 ];
 ```
 
-### Configuring shared settings
+### 配置共享设置
 
-Refer to the [official docs](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#configuring-shared-settings).
+参考[官方文档](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#configuring-shared-settings)。
 
-The schema of the `settings.react` object would be identical to that of what's already described above in the legacy config section.
+`settings.react`对象的模式将与上述旧配置部分中已经描述的完全相同。
 
-<!-- markdownlint-disable-next-line no-duplicate-heading -->
-### Shareable configs
+### 可共享的配置
 
-There're also 3 shareable configs.
+还有3个可共享的配置。
 
 - `eslint-plugin-react/configs/all`
 - `eslint-plugin-react/configs/recommended`
 - `eslint-plugin-react/configs/jsx-runtime`
 
-If your eslint.config.js is ESM, include the `.js` extension (e.g. `eslint-plugin-react/recommended.js`). Note that the next semver-major will require omitting the extension for these imports.
+如果你的eslint.config.js是ESM，包括`.js`扩展名（例如`eslint-plugin-react/recommended.js`）。注意，下一个semver-major将要求省略这些导入的扩展名。
 
-**Note**: These configurations will import `eslint-plugin-react` and enable JSX in [`languageOptions.parserOptions`](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#configuration-objects).
+**注意**：这些配置将导入`eslint-plugin-react`并在[`languageOptions.parserOptions`](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#configuration-objects)中启用JSX。
 
-In the new config system, `plugin:` protocol(e.g. `plugin:react/recommended`) is no longer valid.
-As eslint does not automatically import the preset config (shareable config), you explicitly do it by yourself.
+在新的配置系统中，`plugin:`协议（例如`plugin:react/recommended`）不再有效。
+由于eslint不会自动导入预设配置（可共享配置），你需要明确地自己做。
 
 ```js
 const reactRecommended = require('eslint-plugin-react/configs/recommended');
 
 module.exports = [
   …
-  reactRecommended, // This is not a plugin object, but a shareable config object
+  reactRecommended, // 这不是一个插件对象，而是一个可共享的配置对象
   …
 ];
 ```
 
-You can of course add/override some properties.
+你当然可以添加/覆盖一些属性。
 
-**Note**: Our shareable configs does not preconfigure `files` or [`languageOptions.globals`](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#configuration-objects).
-For most of the cases, you probably want to configure some properties by yourself.
+**注意**：我们的可共享配置不预先配置`files`或[`languageOptions.globals`](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#configuration-objects)。
+在大多数情况下，你可能想要自己配置一些属性。
 
 ```js
 const reactRecommended = require('eslint-plugin-react/configs/recommended');
@@ -254,7 +251,7 @@ module.exports = [
 ];
 ```
 
-The above example is same as the example below, as the new config system is based on chaining.
+上面的例子与下面的例子相同，因为新的配置系统基于链式。
 
 ```js
 const reactRecommended = require('eslint-plugin-react/configs/recommended');
@@ -279,17 +276,17 @@ module.exports = [
 ];
 ```
 
-## List of supported rules
+## 支持的规则列表
 
 <!-- begin auto-generated rules list -->
 
-💼 [Configurations](https://github.com/jsx-eslint/eslint-plugin-react/#shareable-configs) enabled in.\
-🚫 [Configurations](https://github.com/jsx-eslint/eslint-plugin-react/#shareable-configs) disabled in.\
-🏃 Set in the `jsx-runtime` [configuration](https://github.com/jsx-eslint/eslint-plugin-react/#shareable-configs).\
-☑️ Set in the `recommended` [configuration](https://github.com/jsx-eslint/eslint-plugin-react/#shareable-configs).\
-🔧 Automatically fixable by the [`--fix` CLI option](https://eslint.org/docs/user-guide/command-line-interface#--fix).\
-💡 Manually fixable by [editor suggestions](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions).\
-❌ Deprecated.
+💼 在[配置](https://github.com/jsx-eslint/eslint-plugin-react/#shareable-configs)中启用。\
+🚫 在[配置](https://github.com/jsx-eslint/eslint-plugin-react/#shareable-configs)中禁用。\
+🏃 在`jsx-runtime`[配置](https://github.com/jsx-eslint/eslint-plugin-react/#shareable-configs)中设置。\
+☑️ 在`recommended`[配置](https://github.com/jsx-eslint/eslint-plugin-react/#shareable-configs)中设置。\
+🔧 可以通过[`--fix` CLI选项](https://eslint.org/docs/user-guide/command-line-interface#--fix)自动修复。\
+💡 可以通过[编辑器建议](https://eslint.org/docs/latest/use/core-concepts#rule-suggestions)手动修复。\
+❌ 已弃用。
 
 | Name                                                                                         | Description                                                                                                                                  | 💼 | 🚫 | 🔧 | 💡 | ❌  |
 | :------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- | :- | :- | :- | :- | :- |
@@ -397,11 +394,11 @@ module.exports = [
 
 <!-- end auto-generated rules list -->
 
-## Other useful plugins
+## 其他有用的插件
 
-- Rules of Hooks: [eslint-plugin-react-hooks](https://github.com/facebook/react/tree/master/packages/eslint-plugin-react-hooks)
-- JSX accessibility: [eslint-plugin-jsx-a11y](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y)
-- React Native: [eslint-plugin-react-native](https://github.com/Intellicode/eslint-plugin-react-native)
+- Hooks 规则：[eslint-plugin-react-hooks](https://github.com/facebook/react/tree/master/packages/eslint-plugin-react-hooks)
+- JSX 可访问性：[eslint-plugin-jsx-a11y](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y)
+- React Native：[eslint-plugin-react-native](https://github.com/Intellicode/eslint-plugin-react-native)
 
 ## License
 
